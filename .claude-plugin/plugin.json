@@ -1,0 +1,27 @@
+{
+  "name": "atr-lab-workshop",
+  "version": "1.0.0",
+  "description": "Plan and build a complete academic workshop for the Advanced Telerobotics Research Lab at Kent State University on any topic: an intake interview with the presenter, then a detailed outline, a run-of-show schedule, branded slides in PowerPoint and PDF with bullet speaker notes, tested hands-on code with a setup check, importable Google Forms for registration and feedback, printed flyers and a hallway TV slide. Slides and promotion are built with the atr-lab-design plugin.",
+  "author": {
+    "name": "ATR Lab",
+    "url": "https://github.com/ATR-Lab"
+  },
+  "homepage": "https://github.com/ATR-Lab/atr-lab-workshop-skill",
+  "repository": "https://github.com/ATR-Lab/atr-lab-workshop-skill",
+  "keywords": [
+    "atr-lab",
+    "kent-state",
+    "workshop",
+    "tutorial",
+    "slides",
+    "speaker-notes",
+    "schedule",
+    "google-forms",
+    "event-flyer",
+    "teaching"
+  ],
+  "skills": [
+    "./atr-lab-workshop"
+  ],
+  "icon": "./.claude-plugin/icon.png"
+}

@@ -1,0 +1,562 @@
+{
+  "_comment": "Finished deck for the path-planning example: compare it with the skeleton workshop.py deck skeleton makes. {{facts.x}} comes from workshop.json; {{assets.code-panel}} is the mist panel behind code. Every slide has 2-6 bullet speaker notes.",
+  "template": "presentation",
+  "title": "{{facts.event_title_plain}}",
+  "author": "Advanced Telerobotics Research Lab",
+  "slides": [
+    {
+      "layout": "ATR - Title",
+      "eyebrow": "WORKSHOP  ·  {{facts.event_date_short|upper}}",
+      "title": "{{facts.event_title_plain}}",
+      "subtitle": "{{facts.subtitle}}",
+      "presenter": "{{facts.presenter_line}}",
+      "notes": [
+        "• Welcome everyone; introduce yourself and the Advanced Telerobotics Research Lab.",
+        "• Say in one sentence what they will be able to do by the end.",
+        "• Time: we run 10 a.m.-2 p.m. EST; doors close the session at 2 p.m.."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "title": "Before we start",
+      "body": [
+        "Wi-Fi: {{facts.wifi}}",
+        "Breaks: 11:20 a.m., 12:20 p.m. (lunch)",
+        "Stuck? Raise a hand and a helper comes to you",
+        "Questions are welcome at any time"
+      ],
+      "notes": [
+        "• Restrooms are down the hall; exits are at the back.",
+        "• Helpers wear lab shirts; point them out now.",
+        "• Breaks are on the schedule and on every break slide."
+      ]
+    },
+    {
+      "layout": "ATR - Agenda",
+      "eyebrow": "TODAY",
+      "title": "Agenda",
+      "panel": [
+        [
+          "WHEN"
+        ],
+        "{{facts.event_date_short}}",
+        "{{facts.time_range}}",
+        [
+          "WHERE"
+        ],
+        "{{facts.venue_short}}"
+      ],
+      "notes": [
+        "• Walk through the parts; each one ends with something they build or run.",
+        "• The clock times are when each part starts."
+      ],
+      "item1": "Setup check",
+      "timing1": "10:10",
+      "item2": "Maps as graphs",
+      "timing2": "10:25",
+      "item3": "A* search",
+      "timing3": "11:30",
+      "item4": "From path to motion",
+      "timing4": "12:55",
+      "item5": "Questions and wrap-up",
+      "timing5": "13:35"
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "title": "By the end, you can",
+      "body": [
+        "Represent a map as an occupancy grid and a graph",
+        "Implement A* and explain how its heuristic works",
+        "Smooth a path into waypoints a robot can follow",
+        "Drive a simulated robot along a path and debug it"
+      ],
+      "notes": [
+        "• Read the objectives aloud; we come back to them at the wrap-up.",
+        "• Ask who has done any of these before, to calibrate the pace."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "title": "Check your setup",
+      "body": [
+        "Open a terminal in the workshop folder",
+        "Run the preflight check:",
+        [
+          "python3 preflight.py"
+        ],
+        "Green: you are ready",
+        "Red: raise a hand, a helper will fix it with you"
+      ],
+      "notes": [
+        "• Time: 15 min. Everyone runs the preflight before we start.",
+        "• Most failures are an old Python: send those people to a helper right away.",
+        "• Do not move on until most of the room shows READY."
+      ]
+    },
+    {
+      "layout": "ATR - Section Divider",
+      "section": 2,
+      "subtitle": "An occupancy grid turns a floor plan into cells a planner can search.",
+      "notes": [
+        "• Part 2: Maps as graphs.",
+        "• Time: 20 min for this block, until 10:45 a.m..",
+        "• Part 1 builds the map every later step searches."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 2,
+      "title": "Maps are grids of free and wall cells",
+      "body": [
+        "Split the floor into equal square cells",
+        "Each cell is free or blocked: one bit each",
+        "Our map: 12 rows by 20 columns, # is a wall",
+        "Smaller cells: more detail, slower search"
+      ],
+      "notes": [
+        "• Show the warehouse map file; ask what each character means.",
+        "• A real robot builds this grid from its lidar; today we read it from a text file.",
+        "• Cell size is the first engineering choice: too big and narrow doors disappear."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 2,
+      "title": "Neighbors make the grid a graph",
+      "body": [
+        "Every free cell is a node",
+        "A step to a free neighbor is an edge",
+        "Four neighbors: up, down, left, right",
+        "Diagonals: only if no wall corner is cut"
+      ],
+      "notes": [
+        "• Draw one cell and its four neighbors on the board.",
+        "• Once it is a graph, every graph search algorithm applies.",
+        "• Ask: why must a diagonal step check both side cells?"
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 2,
+      "title": "Demo: A grid in code",
+      "body": [
+        "Run: python3 grid.py",
+        "What to watch for:",
+        [
+          "Row and column order: (row, col)"
+        ],
+        [
+          "Start and goal found in the file"
+        ],
+        [
+          "The start has only two free neighbors"
+        ]
+      ],
+      "notes": [
+        "• Run grid.py from the solution folder and read the output aloud.",
+        "• Point out that row 0 is the top of the file.",
+        "• Fallback: the expected output is in the module README if the projector fails."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "title": "neighbors() in 12 lines",
+      "body": "",
+      "images": [
+        {
+          "path": "{{assets.code-panel}}",
+          "alt": "",
+          "decorative": true,
+          "box": {
+            "x": 0.5,
+            "y": 1.42,
+            "w": 9.0,
+            "h": 3.2
+          },
+          "fit": "contain"
+        }
+      ],
+      "textboxes": [
+        {
+          "text": "def neighbors(grid, cell, diagonal=False):\n    row, col = cell\n    steps = SIDE_STEPS + (DIAGONAL_STEPS if diagonal else [])\n    found = []\n    for d_row, d_col in steps:\n        nxt = (row + d_row, col + d_col)\n        if not is_free(grid, nxt):\n            continue\n        found.append(nxt)\n    return found",
+          "box": {
+            "x": 0.68,
+            "y": 1.56,
+            "w": 8.64,
+            "h": 2.95
+          },
+          "size": 16,
+          "font": "Source Code Pro",
+          "color": "1B2533",
+          "code": true
+        }
+      ],
+      "notes": [
+        "• This is the shape of the answer, without the corner rule.",
+        "• is_free() checks the bounds first, so we never index outside the map.",
+        "• The corner-cutting rule for diagonals is the stretch goal."
+      ],
+      "section": 2
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 2,
+      "title": "Load a map and find neighbors",
+      "notes": [
+        "• Time: 25 min, until 11:20 a.m..",
+        "• Read the steps; say where the starter code is.",
+        "• Walk the room; note common problems to address at the checkpoint."
+      ],
+      "body": [
+        "1. Load the map file",
+        "2. Mark start and goal",
+        "3. Write neighbors()",
+        "4. Run the tests",
+        "Time: 25 min, until 11:20 a.m."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 2,
+      "title": "Checkpoint: Maps as graphs",
+      "body": [
+        "Done when: test_grid.py passes and the map prints",
+        "Finished early? Allow diagonal moves with the right cost",
+        "Starter code: code/01-maps-as-graphs/starter",
+        "Stuck for 5 minutes? Raise a hand"
+      ],
+      "notes": [
+        "• Show what success looks like before they start.",
+        "• At the end, ask two people to share what they saw.",
+        "• Solutions are in code/01-maps-as-graphs."
+      ]
+    },
+    {
+      "layout": "ATR - Statement",
+      "eyebrow": "BREAK",
+      "statement": "Break: back at 11:30 a.m.",
+      "attribution": "Next: A* search",
+      "notes": [
+        "• 10 min. Say the return time out loud.",
+        "• Leave this slide up for the whole break."
+      ]
+    },
+    {
+      "layout": "ATR - Section Divider",
+      "section": 3,
+      "subtitle": "A* finds the shortest path by expanding the most promising cell first.",
+      "notes": [
+        "• Part 3: A* search.",
+        "• Time: 15 min for this block, until 11:45 a.m..",
+        "• Part 2 turns the map into a shortest path."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 3,
+      "title": "Blind search explores everything",
+      "body": [
+        "Expand cells in order of distance from the start",
+        "Finds the shortest path, eventually",
+        "Our map: 100 cells expanded for a 32-step path",
+        "No idea where the goal is"
+      ],
+      "notes": [
+        "• Animate a ripple spreading from the start on the board.",
+        "• Dijkstra's algorithm is the same idea with step costs; on this grid they agree.",
+        "• The 100 cells come from astar.py with the zero heuristic."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 3,
+      "title": "Heuristics aim the search at the goal",
+      "body": [
+        "f(n) = g(n) + h(n)",
+        [
+          "g: cost so far",
+          "h: estimate of the cost to go"
+        ],
+        "Always expand the lowest f first",
+        "Manhattan distance: 60 cells, same 32 steps"
+      ],
+      "notes": [
+        "• Write f = g + h on the board and leave it there.",
+        "• Same path length, 40% fewer cells: that is the payoff.",
+        "• Ask: what happens if h is always zero?"
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 3,
+      "title": "Admissible heuristics keep A* optimal",
+      "body": [
+        "Admissible: never overestimates the true cost",
+        "Manhattan is exact for 4-way moves",
+        "With diagonals, use straight-line distance",
+        "Overestimate: faster, but paths can be longer"
+      ],
+      "notes": [
+        "• Admissible means optimistic: the estimate is never worse than reality.",
+        "• Manhattan overestimates once diagonal moves are allowed; that is the stretch goal.",
+        "• Engineers sometimes trade optimality for speed on purpose (weighted A*)."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "title": "The A* loop",
+      "body": "",
+      "images": [
+        {
+          "path": "{{assets.code-panel}}",
+          "alt": "",
+          "decorative": true,
+          "box": {
+            "x": 0.5,
+            "y": 1.42,
+            "w": 9.0,
+            "h": 3.2
+          },
+          "fit": "contain"
+        }
+      ],
+      "textboxes": [
+        {
+          "text": "while open_set:\n    _, cost, cell = heapq.heappop(open_set)\n    if cell in closed:\n        continue\n    closed.add(cell)\n    if cell == goal:\n        return reconstruct(came_from, goal), len(closed)\n    for nxt in neighbors(grid, cell, diagonal):\n        new_cost = cost + step_cost(cell, nxt)\n        if new_cost < cost_so_far.get(nxt, math.inf):\n            ...  # record it, then push it with f = new_cost + h",
+          "box": {
+            "x": 0.68,
+            "y": 1.56,
+            "w": 8.64,
+            "h": 2.95
+          },
+          "size": 16,
+          "font": "Source Code Pro",
+          "color": "1B2533",
+          "code": true
+        }
+      ],
+      "notes": [
+        "• Walk through one iteration with the board drawing.",
+        "• The heap always hands back the lowest f; ties break on g.",
+        "• The ... is exactly what they write in the activity."
+      ],
+      "section": 3
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 3,
+      "title": "Write A* and compare heuristics",
+      "notes": [
+        "• Time: 35 min, until 12:20 p.m..",
+        "• Read the steps; say where the starter code is.",
+        "• Walk the room; note common problems to address at the checkpoint."
+      ],
+      "body": [
+        "1. Fill in the open set",
+        "2. Pop the lowest f-score",
+        "3. Reconstruct the path",
+        "4. Try two heuristics",
+        "Time: 35 min, until 12:20 p.m."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 3,
+      "title": "Checkpoint: A* search",
+      "body": [
+        "Done when: test_astar.py passes and the path is drawn",
+        "Finished early? Count expanded cells for each heuristic",
+        "Starter code: code/02-a-star-search/starter",
+        "Stuck for 5 minutes? Raise a hand"
+      ],
+      "notes": [
+        "• Show what success looks like before they start.",
+        "• At the end, ask two people to share what they saw.",
+        "• Solutions are in code/02-a-star-search."
+      ]
+    },
+    {
+      "layout": "ATR - Statement",
+      "eyebrow": "LUNCH",
+      "statement": "Lunch: back at 12:55 p.m.",
+      "attribution": "Next: From path to motion",
+      "notes": [
+        "• 35 min. Say the return time out loud.",
+        "• Leave this slide up for the whole break."
+      ]
+    },
+    {
+      "layout": "ATR - Section Divider",
+      "section": 4,
+      "subtitle": "A robot follows waypoints: simplify the path, then steer toward a point ahead.",
+      "notes": [
+        "• Part 4: From path to motion.",
+        "• Time: 10 min for this block, until 1:05 p.m..",
+        "• Part 3 turns the path into motion a robot can follow."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 4,
+      "title": "Grid paths zigzag: keep the corners",
+      "body": [
+        "A* returns every cell: 33 of them",
+        "A robot needs only the turns: 12 waypoints",
+        "Keep a cell where the direction changes",
+        "Fewer waypoints, smoother driving"
+      ],
+      "notes": [
+        "• Show the 33-cell path, then the 12 corners, side by side.",
+        "• simplify() is step 1 of the activity.",
+        "• Real planners also smooth curves; corners are enough for today."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 4,
+      "title": "Pure pursuit aims at a point ahead",
+      "body": [
+        "Aim at a waypoint a short distance ahead",
+        "Turn toward it, at a limited rate",
+        "Move forward a little; repeat each tick",
+        "Look-ahead too short: wobble; too long: cut corners"
+      ],
+      "notes": [
+        "• Act it out: walk toward a point ahead of you and keep re-aiming.",
+        "• The turn limit is what makes it a robot rather than a teleport.",
+        "• The stretch goal is tuning the look-ahead distance."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "title": "One tick of the controller",
+      "body": "",
+      "images": [
+        {
+          "path": "{{assets.code-panel}}",
+          "alt": "",
+          "decorative": true,
+          "box": {
+            "x": 0.5,
+            "y": 1.42,
+            "w": 9.0,
+            "h": 3.2
+          },
+          "fit": "contain"
+        }
+      ],
+      "textboxes": [
+        {
+          "text": "target, index = lookahead_point(\n    waypoints, index, (x, y), lookahead)\nheading = steer(heading, (x, y), target, max_turn)\nx += speed * math.cos(heading)\ny += speed * math.sin(heading)\nif grid[int(y)][int(x)]:\n    crashed = True",
+          "box": {
+            "x": 0.68,
+            "y": 1.56,
+            "w": 8.64,
+            "h": 2.95
+          },
+          "size": 16,
+          "font": "Source Code Pro",
+          "color": "1B2533",
+          "code": true
+        }
+      ],
+      "notes": [
+        "• Three lines do the work: pick a target, turn, move.",
+        "• x is the column and y the row, so the map is not flipped.",
+        "• The crash check is the test they need to pass."
+      ],
+      "section": 4
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 4,
+      "title": "Hands-on: Drive the robot to the goal",
+      "notes": [
+        "• Time: 30 min, until 1:35 p.m..",
+        "• Read the steps; say where the starter code is.",
+        "• Walk the room; note common problems to address at the checkpoint."
+      ],
+      "body": [
+        "1. Simplify the path",
+        "2. Pick a look-ahead point",
+        "3. Compute the steering",
+        "4. Run the simulation",
+        "Time: 30 min, until 1:35 p.m."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "section": 4,
+      "title": "Checkpoint: From path to motion",
+      "body": [
+        "Done when: The robot reaches the goal without hitting a wall",
+        "Finished early? Tune the look-ahead distance and compare",
+        "Starter code: code/03-from-path-to-motion/starter",
+        "Stuck for 5 minutes? Raise a hand"
+      ],
+      "notes": [
+        "• Show what success looks like before they start.",
+        "• At the end, ask two people to share what they saw.",
+        "• Solutions are in code/03-from-path-to-motion."
+      ]
+    },
+    {
+      "layout": "ATR - Statement",
+      "eyebrow": "QUESTIONS",
+      "statement": "What questions do you have?",
+      "attribution": "{{facts.presenter_line}}",
+      "notes": [
+        "• Time: 10 min.",
+        "• Repeat each question for the room.",
+        "• Park anything off-topic and follow up by email."
+      ]
+    },
+    {
+      "layout": "ATR - Title + Content",
+      "title": "What you can do now",
+      "body": [
+        "Represent a map as an occupancy grid and a graph",
+        "Implement A* and explain how its heuristic works",
+        "Smooth a path into waypoints a robot can follow",
+        "Drive a simulated robot along a path and debug it"
+      ],
+      "notes": [
+        "• Go back to the four objectives; ask for a show of hands on each.",
+        "• Next steps: the same planner on a real robot runs on ROS 2 Nav2.",
+        "• The code stays theirs: the repository link is in the README."
+      ]
+    },
+    {
+      "layout": "ATR - Content + Image",
+      "title": "Tell us how it went",
+      "subhead": "Two minutes, anonymous",
+      "body": [
+        "Scan the code",
+        "Or open the link below"
+      ],
+      "figure": {
+        "qr": {
+          "url": "{{facts.feedback_url}}",
+          "size_in": 1.6
+        }
+      },
+      "figure_alt": "QR code that opens the workshop feedback form.",
+      "caption": "FEEDBACK // {{facts.feedback_url|printed}}",
+      "notes": [
+        "• Ask everyone to fill in the form before they leave; it takes two minutes.",
+        "• Leave this slide up while people pack up."
+      ]
+    },
+    {
+      "layout": "ATR - Thank You",
+      "title": "Thank you",
+      "presenter": "{{facts.presenter_name}}",
+      "email": "{{facts.presenter_email}}",
+      "message": "Questions and collaboration welcome.",
+      "notes": [
+        "• Thank the helpers and the hosts.",
+        "• Remind them where the materials live."
+      ]
+    }
+  ]
+}
