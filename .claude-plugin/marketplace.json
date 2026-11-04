@@ -1,0 +1,17 @@
+{
+  "name": "atr-lab-workshop",
+  "metadata": {
+    "description": "The ATR Lab workshop builder for Claude Code (Advanced Telerobotics Research Lab, Kent State University)."
+  },
+  "owner": {
+    "name": "ATR Lab",
+    "url": "https://github.com/ATR-Lab"
+  },
+  "plugins": [
+    {
+      "name": "atr-lab-workshop",
+      "source": "./",
+      "description": "Academic workshops on any topic: intake interview, outline, schedule, slides with speaker notes, code, Google Forms, flyers and a TV slide, built on the atr-lab-design brand system."
+    }
+  ]
+}

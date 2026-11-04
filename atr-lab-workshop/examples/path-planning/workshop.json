@@ -1,0 +1,306 @@
+{
+  "_comment": "Example workshop for the atr-lab-workshop skill: the brief, the finished deck spec (slides/deck.json) and tested code (code/). The date and room are sample values and the registration links are empty on purpose. Copy it out of the skill first: python3 scripts/workshop.py init ~/work/path-planning --example path-planning",
+  "schema": "atr-workshop/1",
+  "slug": "robot-path-planning-2027-02-13",
+  "title": "Robot path planning in Python",
+  "short_title": "Robot path planning",
+  "subtitle": "From occupancy grids to a moving robot",
+  "summary": "Turn a map into a graph, find a path with A* and drive a simulated robot along it, all in plain Python.",
+  "topics": [
+    "Occupancy grids and graphs",
+    "A* search and heuristics",
+    "Following a path with a differential-drive robot"
+  ],
+  "format": "in-person",
+  "when": {
+    "date": "2027-02-13",
+    "start": "10:00",
+    "end": "14:00",
+    "timezone": "America/New_York",
+    "check_in": "9:45 a.m."
+  },
+  "where": {
+    "building": "Mathematical Sciences Building",
+    "room": "Room 228",
+    "campus": "Kent State University, Kent Campus",
+    "address": "1300 Lefton Esplanade, Kent, OH 44242",
+    "online_url": "",
+    "parking": "",
+    "wifi": "eduroam or KSU-Guest",
+    "notes": ""
+  },
+  "audience": {
+    "who": "Undergraduate and graduate students",
+    "level": "beginner",
+    "capacity": 24,
+    "cost": "Free, lunch provided"
+  },
+  "presenters": [
+    {
+      "name": "ATR Lab workshop team",
+      "role": "",
+      "email": "atrlab.kent@gmail.com"
+    }
+  ],
+  "prerequisites": {
+    "skills": [
+      "Python basics: functions, lists and loops",
+      "Running a script from a terminal"
+    ],
+    "hardware": [
+      "Laptop with macOS, Windows or Linux and its charger"
+    ],
+    "software": [
+      "Python 3.10 or newer",
+      "Git",
+      "VS Code or another editor"
+    ],
+    "accounts": [],
+    "provided": [
+      "Printed map sheets",
+      "Lunch"
+    ],
+    "pre_work": [
+      "Clone the workshop repository and run python3 preflight.py"
+    ]
+  },
+  "objectives": [
+    "Represent a map as an occupancy grid and a graph",
+    "Implement A* and explain how its heuristic works",
+    "Smooth a path into waypoints a robot can follow",
+    "Drive a simulated robot along a path and debug it"
+  ],
+  "modules": [
+    {
+      "id": "m1",
+      "title": "Maps as graphs",
+      "agenda_title": "Maps as graphs",
+      "verb": "Model",
+      "summary": "An occupancy grid turns a floor plan into cells a planner can search.",
+      "objectives": [
+        "Represent a map as an occupancy grid and a graph"
+      ],
+      "key_points": [
+        "Maps are grids of free and wall cells",
+        "Neighbors make the grid a graph"
+      ],
+      "activity": {
+        "title": "Load a map and find neighbors",
+        "minutes": 25,
+        "steps": [
+          "Load the map file",
+          "Mark start and goal",
+          "Write neighbors()",
+          "Run the tests"
+        ],
+        "checkpoint": "test_grid.py passes and the map prints",
+        "stretch": "Allow diagonal moves with the right cost"
+      },
+      "code_dir": "code/01-maps-as-graphs"
+    },
+    {
+      "id": "m2",
+      "title": "A* search",
+      "agenda_title": "A* search",
+      "verb": "Search",
+      "summary": "A* finds the shortest path by expanding the most promising cell first.",
+      "objectives": [
+        "Implement A* and explain how its heuristic works"
+      ],
+      "key_points": [
+        "Blind search explores everything",
+        "Heuristics aim the search at the goal",
+        "Admissible heuristics keep A* optimal"
+      ],
+      "activity": {
+        "title": "Write A* and compare heuristics",
+        "minutes": 35,
+        "steps": [
+          "Fill in the open set",
+          "Pop the lowest f-score",
+          "Reconstruct the path",
+          "Try two heuristics"
+        ],
+        "checkpoint": "test_astar.py passes and the path is drawn",
+        "stretch": "Count expanded cells for each heuristic"
+      },
+      "code_dir": "code/02-a-star-search"
+    },
+    {
+      "id": "m3",
+      "title": "From path to motion",
+      "agenda_title": "From path to motion",
+      "verb": "Drive",
+      "summary": "A robot follows waypoints: simplify the path, then steer toward a point ahead.",
+      "objectives": [
+        "Smooth a path into waypoints a robot can follow",
+        "Drive a simulated robot along a path and debug it"
+      ],
+      "key_points": [
+        "Grid paths zigzag: keep the corners",
+        "Pure pursuit aims at a point ahead"
+      ],
+      "activity": {
+        "title": "Drive the robot to the goal",
+        "minutes": 30,
+        "steps": [
+          "Simplify the path",
+          "Pick a look-ahead point",
+          "Compute the steering",
+          "Run the simulation"
+        ],
+        "checkpoint": "The robot reaches the goal without hitting a wall",
+        "stretch": "Tune the look-ahead distance and compare"
+      },
+      "code_dir": "code/03-from-path-to-motion"
+    }
+  ],
+  "schedule": [
+    {
+      "kind": "welcome",
+      "title": "Welcome and goals",
+      "minutes": 10
+    },
+    {
+      "kind": "setup",
+      "title": "Setup check",
+      "minutes": 15,
+      "notes": "Everyone runs preflight.py"
+    },
+    {
+      "kind": "talk",
+      "title": "Maps as graphs",
+      "minutes": 20,
+      "module": "m1"
+    },
+    {
+      "kind": "demo",
+      "title": "A grid in code",
+      "minutes": 10,
+      "module": "m1"
+    },
+    {
+      "kind": "hands-on",
+      "title": "Load a map and find neighbors",
+      "minutes": 25,
+      "module": "m1"
+    },
+    {
+      "kind": "break",
+      "title": "Break",
+      "minutes": 10
+    },
+    {
+      "kind": "talk",
+      "title": "A* search",
+      "minutes": 15,
+      "module": "m2"
+    },
+    {
+      "kind": "hands-on",
+      "title": "Write A*",
+      "minutes": 35,
+      "module": "m2"
+    },
+    {
+      "kind": "lunch",
+      "title": "Lunch",
+      "minutes": 35
+    },
+    {
+      "kind": "talk",
+      "title": "From path to motion",
+      "minutes": 10,
+      "module": "m3"
+    },
+    {
+      "kind": "hands-on",
+      "title": "Drive the robot",
+      "minutes": 30,
+      "module": "m3"
+    },
+    {
+      "kind": "qa",
+      "title": "Questions",
+      "minutes": 10
+    },
+    {
+      "kind": "wrap-up",
+      "title": "Wrap-up and next steps",
+      "minutes": 10
+    },
+    {
+      "kind": "feedback",
+      "title": "Feedback form",
+      "minutes": 5
+    }
+  ],
+  "materials": {
+    "repo_url": "",
+    "languages": [
+      "Python"
+    ],
+    "stack": [
+      "Python 3.10+",
+      "matplotlib (optional, for plots)"
+    ],
+    "license": "MIT"
+  },
+  "registration": {
+    "url": "",
+    "printed_url": "",
+    "deadline": "Wednesday, Feb. 10",
+    "feedback_url": "",
+    "forms": [
+      "registration",
+      "feedback"
+    ],
+    "extra_questions": []
+  },
+  "promotion": {
+    "eyebrow": "HANDS-ON WORKSHOP  ·  ROBOTICS IN PYTHON",
+    "flyer_title": "Robot path planning\nin Python",
+    "flyer_sizes": [
+      "letter",
+      "tabloid"
+    ],
+    "tv_slide": true,
+    "tv_title": "Robot path planning in Python",
+    "motion": "",
+    "teo_cameo": false,
+    "agenda": [
+      "Turn a map into a graph",
+      "Write A* and compare heuristics",
+      "Drive a simulated robot"
+    ],
+    "workflow": [
+      [
+        "Model",
+        "Map to occupancy grid"
+      ],
+      [
+        "Search",
+        "Shortest path with A*"
+      ],
+      [
+        "Drive",
+        "Follow it in simulation"
+      ]
+    ],
+    "tools": [],
+    "registration_head": "Sign up by Feb. 10",
+    "audience": "Undergraduate and graduate students\nBeginners welcome, lunch provided",
+    "requirements": "Bring a laptop and charger with Python 3.10 or newer, Git and a code editor installed."
+  },
+  "contact": {
+    "email": "atrlab.kent@gmail.com",
+    "phone": ""
+  },
+  "requests": [
+    "Keep the code dependency-free so it runs on any laptop"
+  ],
+  "assumptions": [
+    "Lunch is provided (from the presenter's note: free, lunch provided)"
+  ],
+  "open_questions": []
+}

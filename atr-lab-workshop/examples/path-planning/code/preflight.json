@@ -1,0 +1,15 @@
+{
+  "title": "Preflight: Robot path planning in Python",
+  "contact": "atrlab.kent@gmail.com",
+  "os": ["macOS", "Windows", "Linux"],
+  "python": ">=3.10",
+  "commands": [
+    {"name": "git", "version_cmd": ["git", "--version"], "min": "2.30", "fix": "install Git from https://git-scm.com/downloads"}
+  ],
+  "python_packages": [],
+  "paths": [
+    {"path": "maps/warehouse.txt", "label": "workshop map present", "fix": "run this from the workshop folder you cloned"}
+  ],
+  "disk": {"min_gb": 1},
+  "manual": ["A code editor opens (VS Code or any other)", "Laptop charger packed"]
+}

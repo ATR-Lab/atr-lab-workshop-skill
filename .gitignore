@@ -1,0 +1,17 @@
+# OS / editor / Python clutter
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Local helper skills; only the link that loads the workshop skill in this repo is committed
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/atr-lab-workshop
+
+# Packaged output and workshop folders built while testing
+*.zip
+*.skill
+/scratch/
